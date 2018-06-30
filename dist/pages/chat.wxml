@@ -1,0 +1,40 @@
+
+  <view class="container chat">
+  <view class="chat-item flex-wrp">
+    <view class="avatar flex-item">
+      <image src="../../images/icon8.jpg"/>
+    </view>
+    <view class="chat-content flex-item">
+      <view class="chat-source">
+        <text class="chatmate">angle</text>
+        <text class="lasttime">2 个月前</text>
+      </view>
+      <text class="chat-txt">努力！奋斗</text>
+    </view>
+  </view>
+  <view class="chat-item flex-wrp">
+    <view class="avatar flex-item">
+      <image src="../../images/icon9.jpeg"/>
+    </view>
+    <view class="chat-content flex-item">
+      <view class="chat-source">
+        <text class="chatmate">棒棒糖</text>
+        <text class="lasttime">3 个月前</text>
+      </view>
+      <text class="chat-txt">没有人会嘲笑你的梦想，只是会嘲笑你的实力</text>
+    </view>
+  </view>
+  <view class="chat-item flex-wrp">
+    <view class="avatar flex-item">
+      <image src="../../images/icon9.jpeg"/>
+    </view>
+    <view class="chat-content flex-item">
+      <view class="chat-source">
+        <text class="chatmate">保温杯</text>
+        <text class="lasttime">5 个月前</text>
+      </view>
+      <text class="chat-txt">舍我其谁，加油</text>
+    </view>
+  </view>
+
+</view>
