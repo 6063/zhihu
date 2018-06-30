@@ -1,0 +1,184 @@
+<style lang="less">
+.container{
+  height: 1500rpx;
+}
+.top-tab{
+  width: 750rpx;
+  height: 100rpx;
+  background: #669966;
+  color: #8CCEFD;
+  font-size: 28rpx;
+  line-height: 100rpx;
+  box-shadow: 0 2px 2px #bebebe;
+  margin: 0 0 8rpx 0;
+  z-index: 9999;
+}
+
+.toptab.active{
+  color: #ffffff;
+  border-bottom: solid 2px #ffffff;
+}
+.activity{
+  width: 750rpx;
+  height: 375rpx;
+  image{
+    width: 750rpx;
+    height: 375rpx;
+  }
+}
+.placehold{
+  height:100rpx;
+  line-height: 100rpx;
+  font-size: 28rpx;
+  padding: 80rpx 0;
+}
+</style>
+<template>
+  
+<view class="top-tab flex-wrp flex-tab " >
+  <view class="toptab flex-item {{currentNavtab==idx ? 'active' : ''}}" wx:for="{{navTab}}" wx:for-index="idx" wx:for-item="itemName" data-idx="{{idx}}" bindtap="switchTab">
+    {{itemName}}
+  </view>
+</view>
+
+<scroll-view scroll-y="true" class="container discovery withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+  <view class="ctnt0" hidden="{{currentNavtab==0 ? '' : true}}">
+    <swiper class="activity" indicator-dots="{{indicatorDots}}"
+            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{imgUrls}}">
+        <swiper-item>
+          <image src="{{item}}" class="slide-image" width="355" height="155"/>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <block wx:for="{{feed}}" wx:for-index="idx" wx:for-item="item" data-idx="{{idx}}">
+      <view class="feed-item">
+        <view class="feed-source">
+          <a class="">
+            <view class="avatar">
+              <image src="{{item.feed_source_img}}"></image>
+            </view>
+            <text>{{item.feed_source_name}}</text>
+          </a>
+        </view>
+        <view class="feed-content">
+          <view class="question" qid="{{question_id}}" bindtap="bindQueTap">
+            <a class="question-link">
+              <text>{{item.question}}</text>
+            </a>
+          </view>
+          <view class="answer-body">
+            <view bindtap="bindItemTap">
+              <text class="answer-txt" aid="{{answer_id}}">{{item.answer_ctnt}}</text>
+            </view>
+            <view class="answer-actions" bindtap="bindItemTap">
+              <view class="like dot">
+                <a>{{item.good_num}} 赞同 </a>
+              </view>
+              <view class="comments dot">
+                <a>{{item.comment_num}} 评论 </a>
+              </view>
+              <view class="follow-it">
+                <a>关注问题</a>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="ctnt1 placehold" hidden="{{currentNavtab==1 ? '' : true}}">
+    <text>圆桌</text>
+  </view>
+  <view class="ctnt2 placehold" hidden="{{currentNavtab==2 ? '' : true}}">
+    <text>热门</text>
+  </view>
+  <view class="ctnt3 placehold" hidden="{{currentNavtab==3 ? '' : true}}">
+    <text>收藏</text>
+  </view>
+</scroll-view>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+  var util = require('../utils/util.js')
+  export default class discovery extends wepy.page {
+    config = {
+      navigationBarTitleText: '知乎'
+    }
+    onLoad() {
+      console.log('onLoad')
+      this.refresh()
+    }
+    data={
+      navTab: ["推荐", "圆桌", "热门", "收藏"],
+      currentNavtab: "0",
+      imgUrls: [
+        '../../images/24213.jpg',
+        '../../images/24280.jpg',
+        '../../images/1444983318907-_DSC1826.jpg'
+      ],
+      indicatorDots: false,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
+      feed: [],
+      feed_length: 0
+    }
+    methods={
+        switchTab: function(e){
+          this.currentNavtab = e.currentTarget.dataset.idx
+        },
+        bindItemTap() {
+          wx.navigateTo({
+            url: './answer'
+          })
+        },
+        bindQueTap() {
+          wx.navigateTo({
+            url: './question'
+          })
+        },
+        upper() {
+          wx.showNavigationBarLoading()
+          this.refresh();
+          console.log("upper");
+          setTimeout(function(){wx.hideNavigationBarLoading();wx.stopPullDownRefresh();}, 2000);
+        },
+        lower(e) {
+          wx.showNavigationBarLoading();            
+          setTimeout(function(){wx.hideNavigationBarLoading();this.nextLoad();}, 1000);
+          console.log("lower")
+        }
+
+    }
+
+     //网络请求数据, 实现刷新
+  refresh0(){
+    var index_api = '';
+    util.getData(index_api)        
+  }
+
+  //使用本地 fake 数据实现刷新效果
+  refresh(){
+    var feed = util.getDiscovery();
+    console.log("loaddata");
+    this.feed = feed.data
+    this.feed_length= feed_data.length
+  }
+
+   //使用本地 fake 数据实现继续加载效果
+  nextLoad(){
+    var next = util.discoveryNext();
+    console.log("continueload");
+    var next_data = next.data;
+    this.feed=this.feed.concat(next_data)
+    this.feed_length=this.feed_length + next_data.length    
+  }
+
+
+
+  }
+</script>
